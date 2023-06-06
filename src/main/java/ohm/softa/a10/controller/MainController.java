@@ -13,10 +13,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static ohm.softa.a10.KitchenHatchConstants.*;
 
@@ -41,7 +39,14 @@ public class MainController implements Initializable {
 	public MainController() {
 		nameGenerator = new NameGenerator();
 
-		this.kitchenHatch = new KitchenHatchImpl(new LinkedList<>(), KITCHEN_HATCH_SIZE);
+
+		final Deque<Order> orders = new LinkedList<>();
+
+		for(int i = 0; i < ORDER_COUNT; i++) {
+			orders.add(new Order(nameGenerator.getRandomDish()));
+		}
+
+		this.kitchenHatch = new KitchenHatchImpl(orders, KITCHEN_HATCH_SIZE);
 		this.progressReporter = new ProgressReporter(kitchenHatch, COOKS_COUNT, WAITERS_COUNT, ORDER_COUNT, KITCHEN_HATCH_SIZE);
 
 	}
