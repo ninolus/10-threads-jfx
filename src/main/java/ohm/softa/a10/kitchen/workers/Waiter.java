@@ -24,15 +24,21 @@ public class Waiter implements Runnable {
 
 	@Override
 	public void run() {
-		while (kitchenHatch.getDishesCount() > 0) {
-			Dish dish = kitchenHatch.dequeueDish();
-			try {
-				Thread.sleep(ThreadLocalRandom.current().nextInt(1, 1000 + 1));
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
+		Dish dish = null;
+		do {
+			dish = kitchenHatch.dequeueDish(1000);
+			if (dish != null) {
+				try {
+					Thread.sleep(ThreadLocalRandom.current().nextInt(1, 1000 + 1));
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+				progressReporter.updateProgress();
+				logger.info("Waiter " + this.name + " has served dish " + dish.getMealName());
 			}
-			progressReporter.updateProgress();
-		}
+		} while (kitchenHatch.getDishesCount() > 0 || dish != null);
+		logger.info("Waiter " + this.name + " is leaving.");
 		progressReporter.notifyWaiterLeaving();
+
 	}
 }
