@@ -24,7 +24,8 @@ public class Waiter implements Runnable {
 
 	@Override
 	public void run() {
-		Dish dish = null;
+		// todo: waiter doesn't know he can go home. Would have to change dequeueDish so the waiter knows when there are no new dishes for a long time
+		Dish dish;
 		do {
 			dish = kitchenHatch.dequeueDish(1000);
 			if (dish != null) {
